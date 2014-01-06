@@ -34,6 +34,11 @@
             <version>4.4</version>
         </dependency>
 
+<dependency>
+        <groupId>com.googlecode.jcsv</groupId>
+        <artifactId>jcsv</artifactId>
+        <version>1.4.0</version>
+</dependency>
     </dependencies>
 
 </project>
