@@ -1,12 +1,12 @@
-package org.gem;
+package org.gem.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.gem.Event.EventStatus;
-import org.gem.utils.DateUtils;
+import org.gem.event.Event.EventStatus;
+import org.gem.event.utils.DateUtils;
 
 public class MasterSchedule {
 

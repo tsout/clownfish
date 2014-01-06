@@ -1,4 +1,4 @@
-package org.gem;
+package org.gem.event;
 
 public class EventException extends Exception {
 

@@ -1,4 +1,4 @@
-package org.gem;
+package org.gem.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;

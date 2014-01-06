@@ -1,10 +1,10 @@
-package org.gem;
+package org.gem.event;
 
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.gem.Event;
-import org.gem.utils.CommandLineUtility;
+import org.gem.event.Event;
+import org.gem.event.utils.CommandLineUtility;
 
 class MeetingManagerTest {
     public static void main(final String args[]) {

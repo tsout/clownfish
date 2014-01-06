@@ -1,4 +1,4 @@
-package org.gem.utils;
+package org.gem.event.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

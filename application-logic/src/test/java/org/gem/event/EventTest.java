@@ -1,13 +1,13 @@
-package org.gem;
+package org.gem.event;
 
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
 
-import org.gem.Event;
-import org.gem.EventException;
-import org.gem.MasterSchedule;
+import org.gem.event.Event;
+import org.gem.event.EventException;
+import org.gem.event.MasterSchedule;
 import org.junit.Before;
 import org.junit.Test;
 

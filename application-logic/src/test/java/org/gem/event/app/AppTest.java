@@ -1,4 +1,4 @@
-package org.gem.app;
+package org.gem.event.app;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

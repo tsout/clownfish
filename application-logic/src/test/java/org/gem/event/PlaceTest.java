@@ -1,6 +1,6 @@
-package org.gem;
+package org.gem.event;
 
-import org.gem.Place;
+import org.gem.event.Place;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package org.gem.app;
+package org.gem.event.app;
 
 /**
  * Hello world!

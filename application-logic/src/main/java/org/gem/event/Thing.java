@@ -1,4 +1,4 @@
-package org.gem;
+package org.gem.event;
 
 import java.net.URI;
 import java.net.URL;
