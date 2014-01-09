@@ -4,15 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class Statement implements BalanceStatement {
+public class CreditCardStatementAnalyzer implements BalanceStatement {
 
 	private List<CCTransaction> transactions=null;
 	
-	Statement (List<CCTransaction> transactions)
+	CreditCardStatementAnalyzer (List<CCTransaction> transactions)
 	{
 		List<CCTransaction> records = new ArrayList<CCTransaction>(transactions);
 		this.transactions = records;

@@ -6,7 +6,6 @@ import java.io.Reader;
 import java.util.Date;
 import java.util.List;
 
-import org.gem.business.CCTransaction;
 import org.gem.business.CapitalOneCreditCardTransaction;
 
 import com.googlecode.jcsv.*;
@@ -45,9 +44,11 @@ public class CSVUtil {
 	}
 
 	private static ValueProcessorProvider getValueProcessorProvider() {
+		
 		ValueProcessorProvider provider = new ValueProcessorProvider();
 		provider.removeValueProcessor(Date.class);
 		provider.registerValueProcessor(Date.class, new DateProcessor());
+		//TODO: determine if the date is being parsed and captured correctly
 		provider.removeValueProcessor(Double.class);
 		provider.registerValueProcessor(Double.class, new DoubleProcessor());
 		return provider;
