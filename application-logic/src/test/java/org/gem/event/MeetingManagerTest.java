@@ -4,7 +4,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.gem.event.Event;
-import org.gem.event.utils.CommandLineUtility;
+import org.gem.utils.CommandLineUtility;
 
 class MeetingManagerTest {
     public static void main(final String args[]) {

@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.gem.event.Event.EventStatus;
-import org.gem.event.utils.DateUtils;
+import org.gem.utils.DateUtils;
 
 public class MasterSchedule {
 
