@@ -39,7 +39,6 @@ public class Statement implements BalanceStatement {
 		{
 			Calendar c = Calendar.getInstance(); 
 			Date transactionDate = t.getDate();
-//			System.out.println("transaction date"+transactionDate);
 			c.setTime(transactionDate);
 			
 			if (c.after(beginningDate) && c.before(endingDate))
@@ -48,7 +47,6 @@ public class Statement implements BalanceStatement {
 			}
 		}
 		
-		System.out.println("subtotal"+subtotal);
 		return subtotal;
 	}
 
@@ -80,7 +78,7 @@ public class Statement implements BalanceStatement {
 
 	public Map<String, Double> categorizeExpenses() {
 		// TODO Auto-generated method stub
-		return null;
+		return categorizeExpenses(this.transactions);
 	}
 	
 }
