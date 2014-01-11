@@ -10,7 +10,7 @@ public class DateProcessor implements ValueProcessor<Date> {
 
 	public Date processValue(String value) {
 		Date date =null;
-		SimpleDateFormat formatter = new SimpleDateFormat("mm/dd/yyy");
+		SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 		try {
 			 date = formatter.parse(value);
 		} catch (ParseException e) {
