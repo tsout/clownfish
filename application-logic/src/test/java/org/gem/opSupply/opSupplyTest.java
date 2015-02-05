@@ -38,6 +38,10 @@ public class opSupplyTest {
 		service.addBaseInventory(i1);
 		service.addBaseInventory(i2);
 		Kit k = service.createAKitFromInventory(i2);
+		k.setKitIdentifier("1234");
+		k.setDescription("Kit 1234");
+		k.setManagingOrganization(EOD_2);
+		k.setBenefittingOrganization(EOD_3);
 		service.addBaseInventory(k);
 		
 		service.showReadiness(); 
