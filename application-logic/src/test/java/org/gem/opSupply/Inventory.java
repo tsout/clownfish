@@ -24,12 +24,10 @@ public class Inventory extends BaseInventory implements ManageableInventory{
 	public void setManagedItems(List<ManagedItem> managedItems) {
 		this.managedItems = managedItems;
 	}
-	@Override
 	public Integer numberOfManagedItems() {
 		return managedItems.size();
 	}
 
-	@Override
 	public boolean addManagedItem(ManagedItem mi) {
 
 		if(isValid(mi)){
@@ -44,7 +42,6 @@ public class Inventory extends BaseInventory implements ManageableInventory{
 	}
 
 
-	@Override
 	public boolean hasManagedItem(ManagedItem mi) {
 		
 		return managedItems.contains(mi);

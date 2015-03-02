@@ -21,7 +21,6 @@ public class Kit extends BaseInventory implements ManageableInventory {
 		warehouseStock = inv.getUuid();
 	}
 
-	@Override
 	public List<ManagedItem> getManagedItems() {
 		// TODO Auto-generated method stub
 		for (StowedItem si : stowedItems) {
@@ -30,7 +29,6 @@ public class Kit extends BaseInventory implements ManageableInventory {
 		return null;
 	}
 
-	@Override
 	public Integer numberOfManagedItems() {
 		return null;
 	}
@@ -51,12 +49,10 @@ public class Kit extends BaseInventory implements ManageableInventory {
 		this.stowedItems = stowedItems;
 	}
 
-	@Override
 	public boolean addManagedItem(ManagedItem mi) {
 		return false;
 	}
 
-	@Override
 	public boolean hasManagedItem(ManagedItem mi) {
 		return false;
 	}
