@@ -5,18 +5,18 @@ import java.util.Date;
 import com.googlecode.jcsv.annotations.MapToColumn;
 
 public class CapitalOneCreditCardTransaction implements CCTransaction {
+	@MapToColumn(column=0)
+	Date date;
+	@MapToColumn(column=1)
+	String creditCardID;
 	@MapToColumn(column=2)
 	String Description; 
 	@MapToColumn(column=4)
 	Double credit;
 	@MapToColumn(column=3)
 	Double debit;
-	@MapToColumn(column=0)
-	Date date;
 	@MapToColumn(column=6)
 	String category;
-	@MapToColumn(column=1)
-	String creditCardID;
 	
 	/* (non-Javadoc)
 	 * @see org.gem.business.CCTransaction#getDescription()

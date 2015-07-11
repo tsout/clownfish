@@ -1,8 +1,11 @@
-package org.gem.opSupply;
+package org.gem.supply;
 
 import java.util.UUID;
 
-public class BaseInventory {
+import org.gem.persistence.PersistableEntity;
+import org.gem.utils.BusinessKey;
+
+public class BaseInventory extends PersistableEntity {
 	private String description;
 	private String managingOrganization;
 	private String benefittingOrganization;
@@ -17,6 +20,16 @@ public class BaseInventory {
 		materialType ="n/a";
 	}
 	
+	public BaseInventory(BusinessKey bk) {
+		super(bk);
+		String managingOrganization = bk.getBusinessKeyValue("orgUuid");
+		String materialType = bk.getBusinessKeyValue("materialType");
+		setMaterialType(materialType);
+		setManagingOrganization(managingOrganization);
+		setMaterialType(materialType);
+
+	}
+
 	public String getDescription() {
 		return description;
 	}

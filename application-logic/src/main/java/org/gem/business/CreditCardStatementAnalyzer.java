@@ -9,24 +9,25 @@ import java.util.Map;
 
 public class CreditCardStatementAnalyzer implements BalanceStatement {
 
-	private List<CCTransaction> transactions=null;
-	
-	CreditCardStatementAnalyzer (List<CCTransaction> transactions)
-	{
+	private List<CCTransaction> transactions = null;
+
+	CreditCardStatementAnalyzer(List<CCTransaction> transactions) {
 		List<CCTransaction> records = new ArrayList<CCTransaction>(transactions);
 		this.transactions = records;
-		
+
 	}
-	private static Double addExpense(Double newExpense, Double lastBalance){
-		
-		return new Double(newExpense+lastBalance);
-		
+
+	private static Double addExpense(Double newExpense, Double lastBalance) {
+
+		return new Double(newExpense + lastBalance);
+
 	}
-	public Double getCumulativeExpensesFromPeriodByCategory( Calendar beginningDate, Calendar endingDate, String category)
-	{
+
+	public Double getCumulativeExpensesFromPeriodByCategory(
+			Calendar beginningDate, Calendar endingDate, String category) {
 		return null;
 	}
-	
+
 	public Double getCumulativeExpensesFromPeriod( Calendar beginningDate, Calendar endingDate)
 	{
 		if(transactions==null){
@@ -34,50 +35,48 @@ public class CreditCardStatementAnalyzer implements BalanceStatement {
 		}
 		
 		Double subtotal = new Double(0.0);
+		int count =0;
 		for (CCTransaction t: transactions)
 		{
 			Calendar c = Calendar.getInstance(); 
 			Date transactionDate = t.getDate();
 			c.setTime(transactionDate);
 			
+			
 			if (c.after(beginningDate) && c.before(endingDate))
 			{
 				subtotal = addExpense(t.getDebit(), subtotal);
 			}
+			count++;
 		}
-		
 		return subtotal;
 	}
 
 	public Double getPercentageOfExpensesByCategory(String categoryName) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Map<String, Double> categorizeExpenses(List<CCTransaction>transactions) {
-		// TODO Auto-generated method stub
-		
-		// find all expenses w/ same description, assign a name / code to each, subtotal Expenses, return map
-		HashMap<String, Double> expenseCategories = new HashMap<String,Double>();
-		
-		for(CCTransaction t: transactions)
-		{
-			if (!expenseCategories.containsKey(t.getDescription()))
-			{
+	public Map<String, Double> categorizeExpenses(
+			List<CCTransaction> transactions) {
+
+		// find all expenses w/ same description, assign a name / code to each,
+		// subtotal Expenses, return map
+		HashMap<String, Double> expenseCategories = new HashMap<String, Double>();
+
+		for (CCTransaction t : transactions) {
+			if (!expenseCategories.containsKey(t.getDescription())) {
 				expenseCategories.put(t.getDescription(), t.getDebit());
-			}
-			else
-			{
+			} else {
 				Double lastBalance = expenseCategories.get(t.getDescription());
-				expenseCategories.put(t.getDescription(), lastBalance+t.getCredit());
+				expenseCategories.put(t.getDescription(),
+						lastBalance + t.getCredit());
 			}
 		}
 		return expenseCategories;
 	}
 
 	public Map<String, Double> categorizeExpenses() {
-		// TODO Auto-generated method stub
 		return categorizeExpenses(this.transactions);
 	}
-	
+
 }

@@ -1,4 +1,4 @@
-package org.gem.opSupply;
+package org.gem.supply;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class opSupplyTest {
+public class SupplyTest {
 
 	private static final String TOA = "TOA";
 	private static final String EOD_3 = "EOD 3";

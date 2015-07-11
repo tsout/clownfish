@@ -1,14 +1,27 @@
-package org.gem.opSupply;
+package org.gem.supply;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import org.gem.persistence.PersistableEntity;
+import org.gem.utils.BusinessKey;
 
 public class Inventory extends BaseInventory implements ManageableInventory{
 
+	private UUID organizationUuid; 
+	private String materialType; 
+	
+	private UUID inventoryUuid;
 	public Integer inventoryId; 
 	List<ManagedItem> managedItems;
 	
-	Inventory(){
+	public Inventory(BusinessKey bk){
+		super(bk);
+			
+		
+	}
+	public Inventory(){
 		managedItems= new ArrayList<ManagedItem>(); 
 	}
 	
@@ -24,12 +37,10 @@ public class Inventory extends BaseInventory implements ManageableInventory{
 	public void setManagedItems(List<ManagedItem> managedItems) {
 		this.managedItems = managedItems;
 	}
-	@Override
 	public Integer numberOfManagedItems() {
 		return managedItems.size();
 	}
 
-	@Override
 	public boolean addManagedItem(ManagedItem mi) {
 
 		if(isValid(mi)){
@@ -44,7 +55,6 @@ public class Inventory extends BaseInventory implements ManageableInventory{
 	}
 
 
-	@Override
 	public boolean hasManagedItem(ManagedItem mi) {
 		
 		return managedItems.contains(mi);
@@ -54,5 +64,5 @@ public class Inventory extends BaseInventory implements ManageableInventory{
 	public String toString() {
 		return "Inventory [inventoryId=" + inventoryId + ", managedItems="
 				+ managedItems + "]";
-	} 
+	}
 }

@@ -1,4 +1,4 @@
-package org.gem.opSupply;
+package org.gem.supply;
 
 import java.util.ArrayList;
 import java.util.List;
