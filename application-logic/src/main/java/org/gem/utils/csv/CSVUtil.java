@@ -18,7 +18,7 @@ import com.googlecode.jcsv.reader.internal.AnnotationEntryParser;
 import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
 
 public class CSVUtil {
-	public static final String CSV_DATA_FILE = "C:\\Users\\--\\Documents\\Expenses2013.csv";
+	public static final String CSV_DATA_FILE = "%UserProfile%\\Documents\\Expenses2013.csv";
 	
 	
 	public static List<CapitalOneCreditCardTransaction> getAllRecordsFromCSV(String csvFilePath) throws Exception
