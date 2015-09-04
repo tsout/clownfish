@@ -1,6 +1,7 @@
 package org.gem.business.shiftscheduler.model;
 
 import java.util.Date;
+import java.util.Formatter;
 import java.util.UUID;
 
 import org.gem.utils.TimePeriod;
@@ -67,13 +68,24 @@ public class Shift implements Comparable {
 
 	@Override
 	public String toString() {
-		return "Shift [startDateTime="
-				+ DateUtils.printDate(timePeriod.getStartDateTime())
-				+ ", endDateTime="
-				+ DateUtils.printDate(timePeriod.getEndDateTime())
-				+ ", description=" + description + ", isCovered=" + isCovered
-				+ ", qtyResourcesRequired=" + qtyResourcesRequired
-				+ ", jobType=" + jobType + ", shiftId=" + shiftUuid + "]";
+		Formatter f = new Formatter();
+		try{
+			String startDate = DateUtils.printDate(timePeriod.getStartDateTime());
+			String endDate=DateUtils.printDate(timePeriod.getEndDateTime());
+			String covered = isCovered?"is":"is NOT";
+			f.format("Shift:%s\n[%s->%s]\nrequires %s resources and %s covered", description,startDate,endDate,qtyResourcesRequired,covered);
+		return f.toString();
+		}
+		finally{
+			f.close();
+		}
+//		return "Shift [startDateTime="
+//				+ DateUtils.printDate(timePeriod.getStartDateTime())
+//				+ ", endDateTime="
+//				+ DateUtils.printDate(timePeriod.getEndDateTime())
+//				+ ", description=" + description + ", isCovered=" + isCovered
+//				+ ", qtyResourcesRequired=" + qtyResourcesRequired
+//				+ ", jobType=" + jobType + ", shiftId=" + shiftUuid + "]";
 	}
 
 	public UUID getShiftId() {

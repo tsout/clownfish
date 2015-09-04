@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+          http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+	<configuration>
+		<stop-on-errors>true</stop-on-errors>
+		<date-format>MM/dd/yyyy HH:mm</date-format>
+		<wildcard>true</wildcard>
+	</configuration>
+
+	<mapping>
+		<class-a>org.gem.event.Person</class-a>
+		<class-b>org.gem.business.shiftscheduler.csv.model.PersonCsvRecord
+		</class-b>
+		<field custom-converter="org.gem.data.integration.utils.DozerUUIDConverter">
+			<a>uuid</a>
+			<b>personId</b>
+		</field>
+		<field>
+			<a>primaryEmailAddress</a>
+			<b>emailAddress</b>
+		</field>
+		<field>
+			<a>workPhone</a>
+			<b>officePhone</b>
+		</field>
+		<field>
+			<a> primaryMailingAddress			</a>
+			<b> mailingAddress			</b>
+		</field>
+	</mapping>
+</mappings>  
+

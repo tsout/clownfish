@@ -1,4 +1,5 @@
 package org.gem.utils.csv;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -67,6 +68,20 @@ public class CSVUtil {
 		provider.removeValueProcessor(Double.class);
 		provider.registerValueProcessor(Double.class, new DoubleProcessor());
 		return provider;
+	}
+
+	public static void printFileContents(String path, String fileName, String extension)
+			throws FileNotFoundException, IOException {
+		File f = new File(path + File.separator + fileName + "." + extension);
+	
+		BufferedReader br= new BufferedReader( new FileReader(f));
+		StringBuffer sb = new StringBuffer();
+	
+		String line="";
+		while ((line =br.readLine())!=null) {
+	
+			System.out.println(line);
+		}
 	}
 	
 	

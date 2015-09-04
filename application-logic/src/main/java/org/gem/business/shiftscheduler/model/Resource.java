@@ -5,22 +5,29 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.gem.utils.csv.CSVSerializable;
 import org.jboss.logging.Logger;
 
 public class Resource {
 
+	Integer resourceId;
 	String firstName;
 	String lastName;
 	String email;
 	String twitter;
 	String facebook;
 	String phone;
-	Integer frequency;
-	FrequencyUnitType frequencyUnit;
+	Integer frequencyLimit;
+	
+	/**
+	 * unit of measure by which a frequency value is evaluated
+	 */
+	FrequencyUnitType frequencyLimitUnitOfMeasure;
 	Set<JobType> qualifiedForJobs;
 	Set<BlackoutDate> blackouts;
 	private Set<Shift> assignments;
@@ -59,8 +66,8 @@ public class Resource {
 			this.blackouts = blackouts;
 		if (jobTypes != null)
 			this.qualifiedForJobs = jobTypes;
-		this.frequencyUnit =unit;
-		this.frequency = frequency;
+		this.frequencyLimitUnitOfMeasure =unit;
+		this.frequencyLimit = frequency;
 	}
 
 	public Set<BlackoutDate> getBlackOutDates() {
@@ -141,11 +148,21 @@ public class Resource {
 
 	@Override
 	public String toString() {
-		return "Resource [firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", twitter=" + twitter + ", facebook="
-				+ facebook + ", phone=" + phone + ", qualifiedForJobs="
-				+ qualifiedForJobs + ", blackouts=\n\t" + blackouts
-				+ ", assignments=\n\t" + assignments + "]";
+//		return "Resource [firstName=" + firstName + ", lastName=" + lastName
+//				+ ", email=" + email + ", twitter=" + twitter + ", facebook="
+//				+ facebook + ", phone=" + phone + ", qualifiedForJobs="
+//				+ qualifiedForJobs + ", blackouts=\n\t" + blackouts
+//				+ ", assignments=\n\t" + assignments + "]";
+		return printResource();
+	}
+	private String printResource(){
+		Formatter f = new Formatter();
+		try{
+			f.format("%10s %10s\n %s\n%s\n%s\n%s\nqualified for:\n\t%s\nassignments:\n\t%s\n\n\n", firstName,lastName,"-",email,twitter,facebook,phone,qualifiedForJobs,assignments);
+			return f.toString();
+		}finally{
+			f.close();
+		}
 	}
 
 	@Override
@@ -181,14 +198,18 @@ public class Resource {
 		return true;
 	}
 
+	/**
+	 * Determines if the resource has been assigned too many times within a prescribed period of time. 
+	 * 
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
-	public boolean resourceAssignmentFrequencyNotExceeded() {
+	public boolean resourceAssignmentFrequencyExceeded() {
 		List<Shift> shiftList = new ArrayList(assignments);
 
 		Collections.sort(shiftList);
-		switch (this.frequencyUnit) {
+		switch (this.frequencyLimitUnitOfMeasure) {
 		case WEEKLY:
-
 			for (int x = 0; x < shiftList.size(); x++) {
 				if((x+1)<shiftList.size()){
 					int currentStart = shiftList.get(x).getStartDateTime().getDate();
@@ -196,7 +217,7 @@ public class Resource {
 					if(Math.abs(currentStart-nextStart )>7){
 						continue;
 					}
-					logger .info("Weekly frequency '"+ this.frequency +"x Week' exceeded");
+					logger .info("Weekly frequency '"+ this.frequencyLimit +"x Week' exceeded");
 					return false;
 				}
 				return true;
@@ -221,5 +242,30 @@ public class Resource {
 		default:
 			return false;
 		}
+	}
+
+	public Integer getResourceId() {
+		return resourceId;
+	}
+
+	public void setResourceId(Integer resourceId) {
+		this.resourceId = resourceId;
+	}
+
+	public Integer getFrequencyLimit() {
+		return frequencyLimit;
+	}
+
+	public void setFrequencyLimit(Integer frequencyLimit) {
+		this.frequencyLimit = frequencyLimit;
+	}
+
+	public FrequencyUnitType getFrequencyLimitUnitOfMeasure() {
+		return frequencyLimitUnitOfMeasure;
+	}
+
+	public void setFrequencyLimitUnitOfMeasure(
+			FrequencyUnitType frequencyLimitUnitOfMeasure) {
+		this.frequencyLimitUnitOfMeasure = frequencyLimitUnitOfMeasure;
 	}
 }

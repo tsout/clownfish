@@ -57,7 +57,7 @@ public class ShiftScheduler {
 			}
 		}
 
-		logger.debug("Resources \n" + resources);
+		logger.info("Resources \n" + resources);
 		logger.debug("Shifts \n" + shifts);
 		logger.info("Assignments \n" + assignments);
 		return assignments;
@@ -66,8 +66,9 @@ public class ShiftScheduler {
 	private void assignResource(Resource r, Shift s,
 			Set<ShiftAssignment> assignments) {
 		if (!shiftConflictsWithBlackout(r, s)
-				&& r.resourceAssignmentFrequencyNotExceeded()
-				&& resourceIsQualified(r, s) && !s.isCovered()) {
+				&& !r.resourceAssignmentFrequencyExceeded()
+				&& resourceIsQualified(r, s) 
+				&& !s.isCovered()) {
 			// assign a shift to a resource
 			ShiftAssignment shiftAssignment = new ShiftAssignment(r, s);
 			assignments.add(shiftAssignment);
