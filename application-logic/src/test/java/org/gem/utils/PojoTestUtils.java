@@ -4,10 +4,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 
-import org.springframework.util.StringUtils;
+
+
+import org.apache.commons.lang3.StringUtils;
 
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
