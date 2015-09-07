@@ -19,8 +19,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
+
+
 import org.gem.utils.CommandLineUtility;
-import org.gem.utils.csv.CSVUtil;
+import org.gem.utils.csv.CreditCardCsvProcessor;
 
 import com.googlecode.jcsv.reader.CSVReader;
 import com.googlecode.jcsv.reader.internal.CSVReaderBuilder;
@@ -178,8 +180,8 @@ public class CreditCardAnalyzer {
 	private static void setUp() {
 		try {
 			transactions = new ArrayList<CCTransaction>();
-			transactions.addAll(CSVUtil
-					.getAllRecordsFromCSV(CSVUtil.CSV_DATA_FILE));
+			transactions.addAll(CreditCardCsvProcessor
+					.getAllCreditCardRecordsFromCSV());
 			ccAnalyzer = new CreditCardStatementAnalyzer(transactions);
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, e.getMessage());

@@ -10,26 +10,26 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.gem.event.Person;
+import org.gem.utils.AbstractPojo;
+import org.gem.utils.PojoUtils;
 import org.gem.utils.csv.CSVSerializable;
 import org.jboss.logging.Logger;
 
-public class Resource {
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-	Integer resourceId;
-	String firstName;
-	String lastName;
-	String email;
-	String twitter;
-	String facebook;
-	String phone;
-	Integer frequencyLimit;
+public class Resource extends AbstractPojo {
+
+	private Integer resourceId;
+	private Person person;	
+	private Integer frequencyLimit;
 	
 	/**
 	 * unit of measure by which a frequency value is evaluated
 	 */
-	FrequencyUnitType frequencyLimitUnitOfMeasure;
-	Set<JobType> qualifiedForJobs;
-	Set<BlackoutDate> blackouts;
+	private FrequencyUnitType frequencyLimitUnitOfMeasure;
+	private Set<JobType> qualifiedForJobs;
+	private Set<BlackoutDate> blackouts;
 	private Set<Shift> assignments;
 	private Logger logger = Logger.getLogger(Resource.class);
 
@@ -38,30 +38,24 @@ public class Resource {
 	}
 
 	private void initialize() {
-		if (this.blackouts == null) {
 			this.blackouts = new HashSet<BlackoutDate>();
-		}
-
-		if (this.qualifiedForJobs == null) {
 			this.qualifiedForJobs = new HashSet<JobType>();
-		}
-		if (this.assignments == null) {
 			this.assignments = new HashSet<Shift>();
-		}
+			person = Person.getInstance();
 	}
 
 	public Resource(String firstName, String lastName, String email,
-			String facebook, String twitter, String phone,
+			String facebook, String twitter, String mobilePhone,
 			Set<BlackoutDate> blackouts, Set<JobType> jobTypes, FrequencyUnitType unit , Integer frequency) {
 
 		initialize();
+		person.setFirstName(firstName);
+		person.setLastName(lastName);
+		person.setPrimaryEmailAddress(email);
 
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.facebook = facebook;
-		this.twitter = twitter;
-		this.phone = phone;
+		person.setFacebook(facebook);
+		person.setTwitter(twitter);
+		person.setMobilePhone(mobilePhone);
 		if (blackouts != null)
 			this.blackouts = blackouts;
 		if (jobTypes != null)
@@ -76,54 +70,6 @@ public class Resource {
 
 	public Set<JobType> getQualifiedForJobTypes() {
 		return qualifiedForJobs;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTwitter() {
-		return twitter;
-	}
-
-	public void setTwitter(String twitter) {
-		this.twitter = twitter;
-	}
-
-	public String getFacebook() {
-		return facebook;
-	}
-
-	public void setFacebook(String facebook) {
-		this.facebook = facebook;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public Set<JobType> getQualifiedForJobs() {
@@ -144,58 +90,6 @@ public class Resource {
 
 	public Set<Shift> getAssignments() {
 		return assignments;
-	}
-
-	@Override
-	public String toString() {
-//		return "Resource [firstName=" + firstName + ", lastName=" + lastName
-//				+ ", email=" + email + ", twitter=" + twitter + ", facebook="
-//				+ facebook + ", phone=" + phone + ", qualifiedForJobs="
-//				+ qualifiedForJobs + ", blackouts=\n\t" + blackouts
-//				+ ", assignments=\n\t" + assignments + "]";
-		return printResource();
-	}
-	private String printResource(){
-		Formatter f = new Formatter();
-		try{
-			f.format("%10s %10s\n %s\n%s\n%s\n%s\nqualified for:\n\t%s\nassignments:\n\t%s\n\n\n", firstName,lastName,"-",email,twitter,facebook,phone,qualifiedForJobs,assignments);
-			return f.toString();
-		}finally{
-			f.close();
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result
-				+ ((lastName == null) ? 0 : lastName.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Resource other = (Resource) obj;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		return true;
 	}
 
 	/**
@@ -268,4 +162,77 @@ public class Resource {
 			FrequencyUnitType frequencyLimitUnitOfMeasure) {
 		this.frequencyLimitUnitOfMeasure = frequencyLimitUnitOfMeasure;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((assignments == null) ? 0 : assignments.hashCode());
+		result = prime * result
+				+ ((blackouts == null) ? 0 : blackouts.hashCode());
+		result = prime * result
+				+ ((frequencyLimit == null) ? 0 : frequencyLimit.hashCode());
+		result = prime
+				* result
+				+ ((frequencyLimitUnitOfMeasure == null) ? 0
+						: frequencyLimitUnitOfMeasure.hashCode());
+		result = prime * result + ((person == null) ? 0 : person.hashCode());
+		result = prime
+				* result
+				+ ((qualifiedForJobs == null) ? 0 : qualifiedForJobs.hashCode());
+		result = prime * result
+				+ ((resourceId == null) ? 0 : resourceId.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Resource other = (Resource) obj;
+		if (assignments == null) {
+			if (other.assignments != null)
+				return false;
+		} else if (!assignments.equals(other.assignments))
+			return false;
+		if (blackouts == null) {
+			if (other.blackouts != null)
+				return false;
+		} else if (!blackouts.equals(other.blackouts))
+			return false;
+		if (frequencyLimit == null) {
+			if (other.frequencyLimit != null)
+				return false;
+		} else if (!frequencyLimit.equals(other.frequencyLimit))
+			return false;
+		if (frequencyLimitUnitOfMeasure != other.frequencyLimitUnitOfMeasure)
+			return false;
+		if (person == null) {
+			if (other.person != null)
+				return false;
+		} else if (!person.equals(other.person))
+			return false;
+		if (qualifiedForJobs == null) {
+			if (other.qualifiedForJobs != null)
+				return false;
+		} else if (!qualifiedForJobs.equals(other.qualifiedForJobs))
+			return false;
+		if (resourceId == null) {
+			if (other.resourceId != null)
+				return false;
+		} else if (!resourceId.equals(other.resourceId))
+			return false;
+		return true;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+	
+	
 }

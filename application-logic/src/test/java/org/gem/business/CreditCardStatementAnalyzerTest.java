@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import org.gem.utils.csv.CSVUtil;
+import org.gem.utils.csv.CreditCardCsvProcessor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -28,7 +28,7 @@ public class CreditCardStatementAnalyzerTest {
 	@Before
 	public void setUp() throws Exception {
 		testTransactions = new ArrayList<CCTransaction>();
-		testTransactions.addAll(CSVUtil.getAllRecordsFromCSV(CSVUtil.CSV_DATA_FILE));
+		testTransactions.addAll(CreditCardCsvProcessor.getAllCreditCardRecordsFromCSV());
 		 statementUnderTest = new CreditCardStatementAnalyzer (testTransactions);
 			 
 		 printTestBreak();

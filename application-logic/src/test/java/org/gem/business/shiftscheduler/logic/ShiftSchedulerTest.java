@@ -11,6 +11,7 @@ import org.gem.business.shiftscheduler.model.JobType;
 import org.gem.business.shiftscheduler.model.Resource;
 import org.gem.business.shiftscheduler.model.BlackoutDate;
 import org.gem.business.shiftscheduler.model.Shift;
+import org.gem.business.shiftscheduler.model.ShiftAssignment;
 import org.gem.utils.DateUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -18,42 +19,66 @@ import org.junit.Test;
 
 public class ShiftSchedulerTest {
 
-	private static ShiftScheduler uut;
+	private static Schedule uut;
+	Set<Resource> resources = seedResources();
+	Set<Shift> shifts = seedShifts();
+	Set<BlackoutDate> blackouts = seedBlackouts();
 
 	@Before
 	public void setUp() throws Exception {
-		uut = new ShiftScheduler();
+		uut = new Schedule();
+		resources = seedResources();
+		shifts = seedShifts();
+		blackouts = seedBlackouts();
+		uut.importResources(resources);
+		uut.importShiftData(shifts);
+		uut.importShiftResourceBlackouts(blackouts);
+
 	}
 
 	@After
 	public void tearDown() throws Exception {
-	}
-
-	@Test
-	public void testImportResources() {
-		assertTrue(uut.importResources().size() > 0);
-	}
-
-	@Test
-	public void testImportShiftData() {
-		assertTrue(uut.importShiftData().size() > 0);
-	}
-
-	@Test
-	public void testImportShiftAssignments() {
-		assertTrue(uut.importShiftAssignments().size() > 0);
+		uut =null;
+		resources = null;
+		shifts = null;
+		blackouts = null;
 	}
 
 	@Test
 	public void testImportShiftResourceBlackouts() {
-		assertTrue(uut.importShiftAssignments().size() > 0);
+		assertTrue(uut.getImportedBlackoutDates().size() > 0);
 	}
 
 	@Test
 	public void testGenerateSchedules() {
-		Set<Resource> resources = seedResources();
-		Set<Shift> shifts = seedShifts();
-		assertTrue("expect assignment size to exceed 0",uut.generateSchedules(resources, shifts).size()>0);
+		Set<ShiftAssignment> generatedSchedule = generateAssignments();
+		assertTrue("expect assignment size to exceed 0",generatedSchedule.size()>0);
+	}
+
+	private Set<ShiftAssignment> generateAssignments() {
+		Set<ShiftAssignment> generatedSchedule = uut.generateSchedules(resources, shifts);		
+		return generatedSchedule;
+	}
+	
+	@Test
+	public void testExportSchedule() throws Exception {
+		generateAssignments();
+		ScheduleDataProcessor dataProcessor = new ScheduleDataProcessor(uut);
+		dataProcessor.toJsonFile(); 
+		
+	}
+	
+	@Test
+	public void testImportSchedule() throws Exception {
+		
+		Schedule importedSchedule = new Schedule();		
+		ScheduleDataProcessor dataProcessor = new ScheduleDataProcessor(uut);
+		importedSchedule = dataProcessor.fromJsonFile();
+		Set<ShiftAssignment> importedShiftAssignments = importedSchedule.getImportedShiftAssignments();
+		assertTrue(importedShiftAssignments.size()>0);
+		System.out.println(importedShiftAssignments);
+		
+		
 	}
 
 	private static Set<BlackoutDate> seedBlackouts() {
@@ -141,9 +166,5 @@ public class ShiftSchedulerTest {
 		return resources;
 	}
 
-	@Test
-	public void testExportShiftSchedule() {
-		fail("Not yet implemented");
-	}
 
 }

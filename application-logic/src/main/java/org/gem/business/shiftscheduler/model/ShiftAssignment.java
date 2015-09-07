@@ -1,10 +1,18 @@
 package org.gem.business.shiftscheduler.model;
 
-import java.util.Formatter;
 
-public class ShiftAssignment {
+import org.gem.utils.AbstractPojo;
+
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+@JsonRootName(value="ShiftAssignment")
+public class ShiftAssignment extends AbstractPojo {
 	private Resource resource;
 	private Shift shift;
+
+	ShiftAssignment() {
+
+	}
 
 	public ShiftAssignment(Resource resource, Shift shift) {
 		initialize();
@@ -35,22 +43,37 @@ public class ShiftAssignment {
 	}
 
 	@Override
-	public String toString() {
-
-		Formatter f = new Formatter();
-		try {
-			f.format("Shift Assignment: %10s %10s,%30s\t%s\n",
-					resource.getFirstName(), resource.getLastName(),
-					shift.getDescription(), shift.getStartDateTime());
-			return f.toString();
-		} finally {
-			f.close();
-		}
-
-		// return "ShiftAssignment [resource=" + resource.getFirstName() +
-		// ", shift=" + shift.getDescription() +" "+shift.getStartDateTime()
-		// + "]";
-
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((resource == null) ? 0 : resource.hashCode());
+		result = prime * result + ((shift == null) ? 0 : shift.hashCode());
+		return result;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ShiftAssignment other = (ShiftAssignment) obj;
+		if (resource == null) {
+			if (other.resource != null)
+				return false;
+		} else if (!resource.equals(other.resource))
+			return false;
+		if (shift == null) {
+			if (other.shift != null)
+				return false;
+		} else if (!shift.equals(other.shift))
+			return false;
+		return true;
+	}
+	
+	
 
 }

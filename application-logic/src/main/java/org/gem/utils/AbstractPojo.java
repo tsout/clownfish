@@ -5,7 +5,7 @@ public class AbstractPojo {
 	
 	public String printPojo(Object pojo){
 		if(pojo!=null){			
-			return PojoTestUtils.printPojo(pojo);
+			return PojoUtils.printPojo(pojo);
 		}else{
 			return null;
 		}

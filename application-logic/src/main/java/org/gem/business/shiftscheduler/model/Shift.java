@@ -4,10 +4,14 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.UUID;
 
+import org.gem.utils.AbstractPojo;
+import org.gem.utils.PojoUtils;
 import org.gem.utils.TimePeriod;
 import org.gem.utils.DateUtils;
 
-public class Shift implements Comparable {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+public class Shift extends AbstractPojo implements Comparable<Shift>  {
 
 	private TimePeriod timePeriod;
 	private String description = "default description";
@@ -26,10 +30,12 @@ public class Shift implements Comparable {
 		return this.jobType;
 	}
 
+	@JsonIgnore
 	public Date getStartDateTime() {
 		return timePeriod.getStartDateTime();
 	}
 
+	@JsonIgnore
 	public Date getEndDateTime() {
 		return timePeriod.getEndDateTime();
 	}
@@ -66,28 +72,6 @@ public class Shift implements Comparable {
 		this.jobType = jobType;
 	}
 
-	@Override
-	public String toString() {
-		Formatter f = new Formatter();
-		try{
-			String startDate = DateUtils.printDate(timePeriod.getStartDateTime());
-			String endDate=DateUtils.printDate(timePeriod.getEndDateTime());
-			String covered = isCovered?"is":"is NOT";
-			f.format("Shift:%s\n[%s->%s]\nrequires %s resources and %s covered", description,startDate,endDate,qtyResourcesRequired,covered);
-		return f.toString();
-		}
-		finally{
-			f.close();
-		}
-//		return "Shift [startDateTime="
-//				+ DateUtils.printDate(timePeriod.getStartDateTime())
-//				+ ", endDateTime="
-//				+ DateUtils.printDate(timePeriod.getEndDateTime())
-//				+ ", description=" + description + ", isCovered=" + isCovered
-//				+ ", qtyResourcesRequired=" + qtyResourcesRequired
-//				+ ", jobType=" + jobType + ", shiftId=" + shiftUuid + "]";
-	}
-
 	public UUID getShiftId() {
 		return shiftUuid;
 	}
@@ -104,7 +88,7 @@ public class Shift implements Comparable {
 		this.timePeriod = timePeriod;
 	}
 
-	public int compareTo(Object o) {
+	public int compareTo(Shift o) {
 		Shift shift = (Shift) o;
 		// order shifts by start times
 		if (this.timePeriod.getStartDateTime().before(
@@ -117,4 +101,61 @@ public class Shift implements Comparable {
 			return 0;
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
+		result = prime * result + (isCovered ? 1231 : 1237);
+		result = prime * result + ((jobType == null) ? 0 : jobType.hashCode());
+		result = prime
+				* result
+				+ ((qtyResourcesRequired == null) ? 0 : qtyResourcesRequired
+						.hashCode());
+		result = prime * result
+				+ ((shiftUuid == null) ? 0 : shiftUuid.hashCode());
+		result = prime * result
+				+ ((timePeriod == null) ? 0 : timePeriod.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Shift other = (Shift) obj;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (isCovered != other.isCovered)
+			return false;
+		if (jobType != other.jobType)
+			return false;
+		if (qtyResourcesRequired == null) {
+			if (other.qtyResourcesRequired != null)
+				return false;
+		} else if (!qtyResourcesRequired.equals(other.qtyResourcesRequired))
+			return false;
+		if (shiftUuid == null) {
+			if (other.shiftUuid != null)
+				return false;
+		} else if (!shiftUuid.equals(other.shiftUuid))
+			return false;
+		if (timePeriod == null) {
+			if (other.timePeriod != null)
+				return false;
+		} else if (!timePeriod.equals(other.timePeriod))
+			return false;
+		return true;
+	}
+	
+	
 }

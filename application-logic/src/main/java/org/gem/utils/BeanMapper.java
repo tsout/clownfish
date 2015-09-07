@@ -33,9 +33,9 @@ public class BeanMapper {
 	}
 
 	public static <T> T map(Object inputObject, Class<T> outputClassType) {
-		System.out.println("Converting: "+PojoTestUtils.printPojo(inputObject));
+		System.out.println("Converting: "+PojoUtils.printPojo(inputObject));
 		T obj = DozerBeanMapperSingletonWrapper.getInstance().map(inputObject, outputClassType);
-		System.out.println("To: "+PojoTestUtils.printPojo(obj));
+		System.out.println("To: "+PojoUtils.printPojo(obj));
 		return obj;
 	}
 

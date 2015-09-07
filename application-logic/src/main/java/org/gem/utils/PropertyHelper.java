@@ -1,19 +1,14 @@
 package org.gem.utils;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
 import java.util.Properties;
 
 public class PropertyHelper {
 
 	Properties propertyFile = null;
-	private String propertyFilePath = null;
-	private Reader fileReader = null;
 
 	public PropertyHelper(String propFileName) throws IOException {
 		if (propFileName != null && !propFileName.isEmpty()) {

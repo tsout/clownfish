@@ -3,9 +3,20 @@ package org.gem.utils;
 import java.util.Date;
 import java.util.Calendar;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 public class TimePeriod {
 	Date periodStartDateTime;
 	Date periodEndDateTime;
+
+	/*
+	 * For Entity Generators only
+	 * package-protected
+	 */
+	TimePeriod() {
+		//noop
+	}
 
 	public TimePeriod(Date start, Date end) {
 		initialize(start, end);
@@ -21,26 +32,27 @@ public class TimePeriod {
 	}
 
 	public Boolean conflictsWith(TimePeriod subjectPeriod) {
-		Boolean periodStartIsBetween = DateUtils.isBetween(this.periodStartDateTime,
-				subjectPeriod.periodStartDateTime, subjectPeriod.periodEndDateTime);
-		Boolean periodEndIsBetween = DateUtils
-				.isBetween(this.periodEndDateTime, subjectPeriod.periodStartDateTime,
-						subjectPeriod.periodEndDateTime);
-		Boolean periodStartEqual= this.periodStartDateTime.equals(subjectPeriod.periodStartDateTime);
-		Boolean periodEndEqual= this.periodEndDateTime.equals(subjectPeriod.periodEndDateTime);
-		
-//		System.out.println("period start conflict "+periodStartIsBetween +" "+ DateUtils.printDateComparison(this.periodStart, subjectPeriod.periodStart, subjectPeriod.periodEnd));
-//		System.out.println("period end conflict "+periodEndIsBetween+" "+ DateUtils.printDateComparison(this.periodEnd, subjectPeriod.periodStart, subjectPeriod.periodEnd));
-		return (periodStartEqual||periodStartIsBetween || periodEndIsBetween||periodEndEqual);
+		Boolean periodStartIsBetween = DateUtils.isBetween(
+				this.periodStartDateTime, subjectPeriod.periodStartDateTime,
+				subjectPeriod.periodEndDateTime);
+		Boolean periodEndIsBetween = DateUtils.isBetween(
+				this.periodEndDateTime, subjectPeriod.periodStartDateTime,
+				subjectPeriod.periodEndDateTime);
+		Boolean periodStartEqual = this.periodStartDateTime
+				.equals(subjectPeriod.periodStartDateTime);
+		Boolean periodEndEqual = this.periodEndDateTime
+				.equals(subjectPeriod.periodEndDateTime);
+
+		// System.out.println("period start conflict "+periodStartIsBetween
+		// +" "+ DateUtils.printDateComparison(this.periodStart,
+		// subjectPeriod.periodStart, subjectPeriod.periodEnd));
+		// System.out.println("period end conflict "+periodEndIsBetween+" "+
+		// DateUtils.printDateComparison(this.periodEnd,
+		// subjectPeriod.periodStart, subjectPeriod.periodEnd));
+		return (periodStartEqual || periodStartIsBetween || periodEndIsBetween || periodEndEqual);
 	}
 
-	public Date getStartDateTime() {
-		return this.periodStartDateTime;
-	}
 	
-	public Date getEndDateTime(){
-		return this.periodEndDateTime;
-	}
 
 	@Override
 	public int hashCode() {
@@ -81,7 +93,24 @@ public class TimePeriod {
 
 	@Override
 	public String toString() {
-		return "TimePeriod [periodStartDateTime=" + DateUtils.printDate(periodStartDateTime)
-				+ ", periodEndDateTime=" + DateUtils.printDate(periodEndDateTime) + "]";
+		return PojoUtils.printPojo(this);
+	}
+
+	@JsonFormat (shape=Shape.STRING, pattern="MM-dd-yyy HH:MM")
+	public Date getStartDateTime() {
+		return periodStartDateTime;
+	}
+
+	public void setStartDateTime(Date periodStartDateTime) {
+		this.periodStartDateTime = periodStartDateTime;
+	}
+
+	@JsonFormat (shape=Shape.STRING, pattern="MM-dd-yyy HH:MM")
+	public Date getEndDateTime() {
+		return periodEndDateTime;
+	}
+
+	public void setEndDateTime(Date periodEndDateTime) {
+		this.periodEndDateTime = periodEndDateTime;
 	}
 }

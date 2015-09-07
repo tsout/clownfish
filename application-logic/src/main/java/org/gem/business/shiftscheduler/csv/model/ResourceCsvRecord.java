@@ -3,14 +3,13 @@ package org.gem.business.shiftscheduler.csv.model;
 import org.gem.business.shiftscheduler.model.FrequencyUnitType;
 import org.gem.utils.csv.CSVSerializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class ResourceCsvRecord implements CSVSerializable {
 	Integer resourceId;
+	String personId; 
 	String firstName;
 	String lastName;
-	String email;
-	String twitter;
-	String facebook;
-	String phone;
 	Integer frequencyLimit;
 	
 	/**
@@ -32,38 +31,6 @@ public class ResourceCsvRecord implements CSVSerializable {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTwitter() {
-		return twitter;
-	}
-
-	public void setTwitter(String twitter) {
-		this.twitter = twitter;
-	}
-
-	public String getFacebook() {
-		return facebook;
-	}
-
-	public void setFacebook(String facebook) {
-		this.facebook = facebook;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
 	}
 
 	public Integer getFrequencyLimit() {
@@ -89,5 +56,14 @@ public class ResourceCsvRecord implements CSVSerializable {
 
 	public void setResourceId(Integer resourceId) {
 		this.resourceId = resourceId;
+	}
+
+
+	public String getPersonId() {
+		return personId;
+	}
+
+	public void setPersonId(String personId) {
+		this.personId = personId;
 	}
 }

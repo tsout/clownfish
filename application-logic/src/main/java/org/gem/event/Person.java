@@ -6,11 +6,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.gem.utils.AbstractPojo;
+import org.gem.utils.PojoUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Person extends AbstractPojo {
+	private UUID personUuid;
 	private String firstName;
 	private String lastName;
-	private UUID uuid;
 	private String mobilePhone;
 	private String workPhone;
 	private String homePhone;
@@ -25,15 +28,28 @@ public class Person extends AbstractPojo {
 	private String primaryMailingAddressStreetNumber;
 	private String primaryMailingAddress;
 	private Date birthday;
+	private String twitter;
+	private String facebook;
 
+	/* Package Protected Constructor forces developer use of non-default constructor, yet allows hibernate to create object
+	 * 
+	 */
 	Person() {
 
 	}
 
-	Person(UUID uuid) {
-		if (this.uuid == null)
-			this.uuid = UUID.fromString(uuid.toString());
+	@JsonIgnore
+	public static Person getInstance(){
+		return new Person(UUID.randomUUID());
+	}
+	public Person(UUID uuid) {
+		if (this.personUuid == null)
+			this.personUuid = UUID.fromString(uuid.toString());
 
+		init();
+	}
+
+	private void init() {
 		primaryEmailAddress = null;
 		primaryMailingAddressCountry = null;
 		primaryMailingAddressState = null;
@@ -54,7 +70,14 @@ public class Person extends AbstractPojo {
 	}
 
 	public UUID getUuid() {
-		return uuid;
+		return personUuid;
+	}
+	
+	/*
+	 * only available for deserialization
+	 */
+	void setUUID(UUID uuid){
+		this.personUuid=uuid;
 	}
 
 	public String getMobilePhone() {
@@ -162,6 +185,22 @@ public class Person extends AbstractPojo {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getTwitter() {
+		return twitter;
+	}
+
+	public void setTwitter(String twitter) {
+		this.twitter = twitter;
+	}
+
+	public String getFacebook() {
+		return facebook;
+	}
+
+	public void setFacebook(String facebook) {
+		this.facebook = facebook;
 	}
 
 }
