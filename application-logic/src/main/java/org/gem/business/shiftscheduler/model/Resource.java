@@ -43,6 +43,18 @@ public class Resource extends AbstractPojo {
 			this.assignments = new HashSet<Shift>();
 			person = Person.getInstance();
 	}
+	
+	public void setPerson(Person person){
+		if (person!=null)
+		{
+			if(validatePerson(person))
+			this.person = person;
+		}
+	}
+
+	private Boolean validatePerson(Person p) {
+		return true;
+	}
 
 	public Resource(String firstName, String lastName, String email,
 			String facebook, String twitter, String mobilePhone,
@@ -62,6 +74,17 @@ public class Resource extends AbstractPojo {
 			this.qualifiedForJobs = jobTypes;
 		this.frequencyLimitUnitOfMeasure =unit;
 		this.frequencyLimit = frequency;
+	}
+
+	public Resource(Person p) {
+		
+		initialize();
+		person.setFirstName(p.getFirstName());
+		person.setLastName(p.getLastName());
+		person.setPrimaryEmailAddress(p.getPrimaryEmailAddress());
+		person.setFacebook(p.getFacebook());
+		person.setTwitter(p.getTwitter());
+		person.setMobilePhone(p.getMobilePhone());
 	}
 
 	public Set<BlackoutDate> getBlackOutDates() {

@@ -2,9 +2,9 @@ package org.gem.business.shiftscheduler.model;
 
 import java.util.Date;
 
+import org.gem.event.TimePeriod;
 import org.gem.utils.AbstractPojo;
 import org.gem.utils.PojoUtils;
-import org.gem.utils.TimePeriod;
 import org.gem.utils.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

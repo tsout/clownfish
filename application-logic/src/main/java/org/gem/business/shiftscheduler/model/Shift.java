@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Formatter;
 import java.util.UUID;
 
+import org.gem.event.TimePeriod;
 import org.gem.utils.AbstractPojo;
 import org.gem.utils.PojoUtils;
-import org.gem.utils.TimePeriod;
 import org.gem.utils.DateUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

@@ -1,35 +1,33 @@
 package org.gem.business.shiftscheduler.logic;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream.GetField;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
-import org.gem.business.shiftscheduler.csv.model.PersonCsvRecord;
-import org.gem.business.shiftscheduler.csv.model.ResourceCsvRecord;
-import org.gem.business.shiftscheduler.csv.model.ShiftCSVRecord;
+import org.apache.commons.lang3.StringUtils;
+import org.gem.business.shiftscheduler.model.BlackoutDate;
 import org.gem.business.shiftscheduler.model.Resource;
-import org.gem.business.shiftscheduler.model.Shift;
-import org.gem.business.shiftscheduler.model.ShiftAssignment;
-import org.gem.utils.BeanMapper;
+import org.gem.event.Person;
 import org.gem.utils.FileUtils;
 import org.gem.utils.JsonUtil;
 import org.gem.utils.PropertyHelper;
-import org.springframework.util.StringUtils;
+import org.gem.utils.csv.jackson.FasterXmlCSVUtil;
+import org.gem.utils.csv.jackson.PersonCSVMixin;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ScheduleDataProcessor {
 
+	public static final String CSV_EXTENSION = "csv";
+	private static final String JSON_EXTENSION = "json";
+	private static final String PROPERTY_NAME_DATA_FILE_PATH = "data.file.path";
+	private static final String CLOWNFISH_PROPERTY_FILE = "clownfish.properties";
+	private static final String DEFAULT_DATA_FILE_PATH = "c:\\test\\";
 	private Schedule s;
 
 	public ScheduleDataProcessor(Schedule s) throws InstantiationException {
@@ -41,10 +39,17 @@ public class ScheduleDataProcessor {
 	}
 
 	private File getFileHandle(String fileName) {
-		String filePath = "c:\\test\\";
+		String filePath = getFilePathFromPropertyFile();
+
+		return FileUtils.createANewFile(filePath, fileName, JSON_EXTENSION);
+	}
+
+	public static String getFilePathFromPropertyFile() {
+		String filePath = DEFAULT_DATA_FILE_PATH;
 		try {
-			PropertyHelper ph = new PropertyHelper("clownfish.properties");
-			String pathFromPropertyFile = ph.getProperty("data.file.path");
+			PropertyHelper ph = new PropertyHelper(CLOWNFISH_PROPERTY_FILE);
+			String pathFromPropertyFile = ph
+					.getProperty(PROPERTY_NAME_DATA_FILE_PATH);
 			filePath = !StringUtils.isEmpty(pathFromPropertyFile) ? pathFromPropertyFile
 					: filePath;
 
@@ -54,8 +59,7 @@ public class ScheduleDataProcessor {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return FileUtils.createANewFile(filePath, fileName, "json");
+		return filePath;
 	}
 
 	public Schedule fromJsonFile() {
@@ -74,8 +78,59 @@ public class ScheduleDataProcessor {
 		boolean shiftExportSucceeded = JsonUtil.toJsonFile(
 				s.getImportedShifts(), getFileHandle("Shifts"));
 
-		return (scheduleExportSucceeded && resourceExportSucceeded && shiftExportSucceeded);
+		Set<Person> people = new HashSet<Person>();
+		for (Resource r : s.getImportedResources()) {
+			people.add(r.getPerson());
+		}
+		boolean personExportedSuceeded = JsonUtil.toJsonFile(people,
+				getFileHandle("People"));
+
+		return (scheduleExportSucceeded && resourceExportSucceeded
+				&& shiftExportSucceeded && personExportedSuceeded);
 
 	}
 
+	public void importPersonCsv(String fileName) {
+		if (!StringUtils.isBlank(fileName)) {
+			FasterXmlCSVUtil csvUtil = new FasterXmlCSVUtil(
+					getFilePathFromPropertyFile(), fileName, CSV_EXTENSION);
+			Set<Person> people = new HashSet<Person>();
+
+			try {
+				people = csvUtil.fromCsvFileWithMixin(Person.class,
+						PersonCSVMixin.class);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			Set<Resource> rSet = new HashSet<Resource>();
+			if (people != null) {
+				for (Person p : people) {
+					if (p != null) {
+						rSet.add(new Resource(p));
+						System.out.println(p);
+					}
+				}
+			}
+			s.importResources(rSet);
+		} else {
+			throw new InvalidParameterException("Filename must not be empty: "
+					+ fileName);
+		}
+	}
+
+	public void exportResourcesToCSV(String fileName) {
+
+		if (!StringUtils.isBlank(fileName)) {
+			FasterXmlCSVUtil csvUtil = new FasterXmlCSVUtil(
+					getFilePathFromPropertyFile(), fileName, CSV_EXTENSION);
+			for (BlackoutDate b : s.getImportedBlackoutDates()) {
+				csvUtil.toCsvFileWithMixin(b, BlackoutDate.class,
+						BlackoutDateMixin.class);
+			}
+
+		} else {
+			throw new InvalidParameterException("Filename must not be empty: "
+					+ fileName);
+		}
+	}
 }

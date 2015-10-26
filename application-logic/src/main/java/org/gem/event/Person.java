@@ -42,6 +42,7 @@ public class Person extends AbstractPojo {
 	public static Person getInstance(){
 		return new Person(UUID.randomUUID());
 	}
+	
 	public Person(UUID uuid) {
 		if (this.personUuid == null)
 			this.personUuid = UUID.fromString(uuid.toString());
