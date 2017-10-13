@@ -1,4 +1,4 @@
-package org.gem.patterns.ringbuffer;
+package org.gem.patterns.throttler;
 
 import static org.junit.Assert.*;
 
@@ -11,7 +11,7 @@ public class RequestThrottlerTest {
 	@Test
 	public void test() throws InterruptedException {
 
-	 RequestThrottler rt = new RequestThrottler(MIN_REQUEST_INTERVAL); 
+	 RequestThrottler<String> rt = RequestThrottler.getInstance(MIN_REQUEST_INTERVAL); 
 	 rt.dispatchRequest("Hi");
 	 Thread.sleep(4L);
 	 rt.dispatchRequest("Hi Again");

@@ -1,4 +1,4 @@
-package org.gem.patterns.ringbuffer;
+package org.gem.patterns.throttler;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayDeque;
@@ -7,58 +7,91 @@ import java.util.Date;
 import java.util.List;
 import java.util.Queue;
 
-public class RequestThrottler {
-	public static final long DEFAULT_MIN_REQUEST_INTERVAL_IN_MILLIS = 10L;
-	Queue<String> queue = new ArrayDeque<String>();
-	List<String> processed = new ArrayList<String>();
+import org.gem.patterns.ringbuffer.RingBuffer;
 
-	long minRequestInterval = DEFAULT_MIN_REQUEST_INTERVAL_IN_MILLIS; 
+/**
+ * Model for throttling requests that
+ * 
+ * This class should be instantiated as a container scoped singleton. A single
+ * container will throttle all requests through this mechanism handles all
+ * requests will use
+ * 
+ * T = generic request type (e.g. string, HTTPRequest,object, etc)
+ * 
+ * @author tim
+ *
+ */
+public class RequestThrottler <T> {
+	public static final long DEFAULT_MIN_REQUEST_INTERVAL_IN_MILLIS = 10L;
+	Queue<T> queue = new ArrayDeque<T>();
+	List<T> processed = new ArrayList<T>();
+	private Date lastRequestDateTime;
+
+	private static long minRequestInterval = DEFAULT_MIN_REQUEST_INTERVAL_IN_MILLIS;
 	RingBuffer<Date> rb;
 
-	RequestThrottler (long maxRequestRate){		
-		this.minRequestInterval= Math.abs(maxRequestRate);
-		init();
-	}
-	RequestThrottler() {
-		init();
-	}
-	private void init() {
-		this.rb = new RingBufferBuilder<Date>().bufferSize(10).setClassType(Date.class)
-				.setFormatter(new SimpleDateFormat("yyyy-DD-MM:HH:mm:ss.SSS")).build();
+	private static RequestThrottler<?>  INSTANCE = null;
+
+	//
+	@SuppressWarnings("unchecked")
+	public static <T> RequestThrottler<T> getInstance(long maxRequestRate) {
+		if (INSTANCE == null) {
+			INSTANCE = new RequestThrottler<T>(maxRequestRate);
+		}
+		return (RequestThrottler<T>) INSTANCE;
 	}
 
-	public void dispatchRequest(String request) {
+	public static <T> RequestThrottler <T> getInstance() {
+		return getInstance(DEFAULT_MIN_REQUEST_INTERVAL_IN_MILLIS);
+	}
+
+
+	private RequestThrottler(long maxRequestRate) {
+		this.minRequestInterval = Math.abs(maxRequestRate);
+		init();
+	}
+
+	private void init() {
+		this.setLastRequestDateTime(null);
+	}
+
+	/**
+	 * Manages Request SLA. If request exceeds throttle threshold, then it is
+	 * queued for later processing. otherwise its processed immediately
+	 * 
+	 * @param request
+	 */
+	public void dispatchRequest(T request) {
 		System.out.println(">dispatchRequest");
 		Date now = new Date();
-		Date lastEntry = rb.getLast();
+		Date lastEntry = getLastRequestDateTime();
+
 		if (lastEntry == null) {
 			processRequest(request);
-			rb.writeNext(now);
 		} else {
-			if (getRequestInterval(now, lastEntry) < this.minRequestInterval) {
+			if (getRequestInterval(now, lastEntry) < minRequestInterval) {
 				queueRequest(request);
-				rb.writeNext(now);
 			} else {
 				processRequest(request);
-				rb.writeNext(now);
-
 			}
 		}
+		this.setLastRequestDateTime(now);
 
 	}
+
 	private long getRequestInterval(Date now, Date lastEntry) {
 		long currentRequestInterval = now.getTime() - lastEntry.getTime();
-		System.out.println("Request Interval: "+currentRequestInterval+"ms");
+		System.out.println("Request Interval: " + currentRequestInterval + "ms");
 		return currentRequestInterval;
 	}
 
-	private void queueRequest(String request) {
+	private void queueRequest(T request) {
 		System.out.println("queued request [ " + request + " ]");
 		queue.add(request);
 
 	}
 
-	private void processRequest(String request) {
+	private  void processRequest(T request) {
 		System.out.println("processed request [ " + request + " ]");
 		processed.add(request);
 	}
@@ -68,5 +101,13 @@ public class RequestThrottler {
 		System.out.println(queue);
 		System.out.println("Processed");
 		System.out.println(processed);
+	}
+
+	public Date getLastRequestDateTime() {
+		return lastRequestDateTime;
+	}
+
+	public void setLastRequestDateTime(Date lastRequestDateTime) {
+		this.lastRequestDateTime = lastRequestDateTime;
 	}
 }
